@@ -1,0 +1,61 @@
+{
+    "query": "c",
+    "feeds": [
+        {
+        "name": "brands_fr",
+        "replies" : [
+                {
+                    "reply": "C&c"
+                },
+                {
+                    "reply": "Ca-va-seul"
+                },
+                {
+                    "reply": "Cacarola"
+                },
+                {
+                    "reply": "Cachaca janeiro"
+                },
+                {
+                    "reply": "Cadillac cotes de bordeaux"
+                },
+                {
+                    "reply": "Café liégeois"
+                },
+                {
+                    "reply": "Cafétique"
+                },
+                {
+                    "reply": "Caisse bois"
+                },
+                {
+                    "reply": "Caisserie"
+                }
+            ]
+        },
+        {
+            "name" : "facets_combinations_fr",
+            "replies" : [
+                {
+                    "reply": "Cacao 365",
+                    "metadata": {
+                        "classification": [ "10305" ],
+                        "classification_url": [ "%2fF-10305-cacao" ],
+                        "facet": [ "brand=\"365\"" ],
+                        "lang": [ "fr" ]
+                    }
+                },
+                {
+                    "reply" : "Cacao Bio",
+                    "metadata" : {
+                        "classification": ["10305"],
+                        "classification_url": ["%2fF-10305-cacao"],
+                        "facet": ["brand=\"Bio\""],
+                        "lang": ["fr"]
+                    }
+                }
+            ]
+        }
+    ]
+}
+

@@ -1,0 +1,28 @@
+{
+    "query": "c",
+    "feeds": [
+        {
+            "replies" : [
+                {
+                    "reply": "Cacao 365",
+                    "metadata": {
+                        "classification": [ "10305" ],
+                        "classification_url": [ "%2fF-10305-cacao" ],
+                        "facet": [ "brand=\"365\"" ],
+                        "lang": [ "fr" ]
+                    }
+                },
+                {
+                    "reply" : "Cacao Bio",
+                    "metadata" : {
+                        "classification": ["10305"],
+                        "classification_url": ["%2fF-10305-cacao"],
+                        "facet": ["brand=\"Bio\""],
+                        "lang": ["fr"]
+                    }
+                }
+            ]
+        }
+    ]
+}
+
