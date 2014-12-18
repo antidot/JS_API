@@ -1,8 +1,8 @@
-/*! Antidot javascrip - V0.1 - 2014-12-09
+/*! Antidot javascrip - V0.2 - 2014-12-18
 */
 
 var Antidot = function () {
-    this._version = "V0.1";
+    this._version = "V0.2";
 };
 
 Antidot.ACP = function (options) {
