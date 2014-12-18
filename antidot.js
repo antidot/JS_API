@@ -15,10 +15,10 @@ Antidot.ACP = function (options) {
     this.domain = options.domain;
     this.language = options.language;
     
-    this.siteOrigin = options.siteOrigin;
+    this.feeds = options.feeds;
     this.timeOut = options.timeOut || 1500;
     
-    this.maxResults = options.maxResults || 10;
+    this.maxResults = options.maxResults;
     this.minLength = options.minLength || 1;
     
     this.sessionId = options.sessionId;
@@ -46,17 +46,30 @@ Antidot.ACP = function (options) {
         return ajaxGet( searchStr, callbacks);
     }
     
+    
     function ajaxGet(searchStr, callbacks) {
         var dataResJson;
         var urlParam = {"afs:service": this.acp.serviceID, 
-                    "afs:status": this.acp.serviceStatus, 
-                    "afs:sessionId": this.acp.sessionId, 
-                    "afs:userId": this.acp.userId,
                     "afs:key": this.acp.api_key,
                     "afs:query": searchStr, 
-                    "afs:lang=":this.acp.language, 
-                    "siteOrigin":this.acp.siteOrigin, 
-                    "afs:replies":this.acp.maxResults};
+                    "afs:lang":this.acp.language};
+                    
+        
+        if(this.acp.maxResults != undefined){
+            urlParam["afs:replies"]=this.acp.maxResults;
+        }
+        
+        if(this.acp.serviceStatus != undefined){
+            urlParam["afs:status"]=this.acp.serviceStatus;
+        }
+        
+        if(this.acp.sessionId != undefined){
+            urlParam["afs:sessionId"]=this.acp.sessionId;
+        }
+        
+        if(this.acp.userId != undefined){
+            urlParam["afs:userId"]=this.acp.userId;
+        }
         
         if(this.acp.options != undefined){
             for (key in this.acp.options) {
@@ -64,9 +77,23 @@ Antidot.ACP = function (options) {
             }
         }
         
-        if(searchStr.length>=this.acp.minLength){
+        var urlCall = this.acp.acpURL +"?";
+        
+        if(this.acp.feeds != undefined){
+            var strFeeds="";
+            for (key in this.acp.feeds) {
+            
+                if(key == 0){
+                    urlCall = urlCall + "afs:feed=" + this.acp.feeds[key];
+                } else {
+                    urlCall = urlCall +  "&afs:feed=" + this.acp.feeds[key];
+                }
+            }
+        }
+        
+        if(this.acp.minLength != undefined && searchStr.length>=this.acp.minLength){
             var request = jQuery.ajax({
-                url: this.acp.acpURL,
+                url: urlCall,
                 type: "GET",
                 timeout:this.acp.timeOut,
                 async:this.acp.async,
