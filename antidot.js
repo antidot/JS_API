@@ -10,7 +10,7 @@ Antidot.ACP = function (options) {
         options = {
         };
     }
-    this.serviceID = options.serviceID || 0;
+    this.serviceId = options.serviceId || 0;
     this.serviceStatus = options.serviceStatus;
     this.domain = options.domain;
     this.language = options.language;
@@ -23,7 +23,7 @@ Antidot.ACP = function (options) {
     
     this.sessionId = options.sessionId;
     this.userId = options.userId;
-    this.api_key = options.api_key;
+    this.key = options.key;
     
     this.options = options.extraParams || {};
     
@@ -33,7 +33,7 @@ Antidot.ACP = function (options) {
     
     //acp.listenTextField('#autocomplete', callbacks);
     this.listenTextField = function (selector, callbacks) {
-        //console.log("fieldSelector : " + this.serviceID)
+        //console.log("fieldSelector : " + this.serviceId)
         jQuery(selector).bind("keyup", {callbacks:callbacks} , function( event ) {
             //var res = ajaxGet(event.data.o, this.value, event.data.callbacks);
             var res = acp.getSuggestions(this.value, event.data.callbacks);
@@ -49,8 +49,8 @@ Antidot.ACP = function (options) {
     
     function ajaxGet(searchStr, callbacks) {
         var dataResJson;
-        var urlParam = {"afs:service": this.acp.serviceID, 
-                    "afs:key": this.acp.api_key,
+        var urlParam = {"afs:service": this.acp.serviceId, 
+                    "afs:key": this.acp.key,
                     "afs:query": searchStr, 
                     "afs:lang":this.acp.language};
                     
