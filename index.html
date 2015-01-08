@@ -62,19 +62,28 @@
     </div>
     <script type="text/javascript">
       
-      var initParam = {
+      var initParam_old = {
                     serviceId:7265,
-                    serviceStatus:"alpha",
-                    sessionId:42,
-                    userId:42,
-                    key:"lsfkghqogj-gfjoqgh-goqgh",
-                    domain:"http://accor-autocompletion-dev.afs-antidot.net",
+                    serviceStatus:"rc",
+                    key:"test",
+                    domain:"http://accor-autocompletion-rct.afs-antidot.net",
                     timeOut:100,
                     maxResults:100
                     //minLength:2
                     //feeds:["hotels_ada_fr","poi_all_fr"]
                     //extraParams:{"afs:feed":"GEOMAJ"}
                   }
+                  
+      var initParam = {
+        serviceId: 7265,
+        serviceStatus: "rc",
+        key: "test",
+        domain: "http://accor-autocompletion-rct.afs-antidot.net",
+         timeOut: 100,
+        maxResults: 100,
+        minLength: 2,
+        siteOrigin: 'ALL'
+      }
       
       var acp = new Antidot.ACP(initParam);
       
@@ -102,7 +111,7 @@
         source: function( request, response ) {
            response( acp.getSuggestions(request.term) );
         },
-        minLength: 3,
+        minLength: 2,
         select: function( event, ui ) {
           console.log( ui.item ?
             "Selected: " + ui.item.label :

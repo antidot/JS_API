@@ -1,8 +1,8 @@
-/*! Antidot javascrip - V0.2 - 2014-12-18
+/*! Antidot javascript - V0.3 - 2015-01-07
 */
 
 var Antidot = function () {
-    this._version = "V0.2";
+    this._version = "V0.3";
 };
 
 Antidot.ACP = function (options) {
@@ -25,7 +25,8 @@ Antidot.ACP = function (options) {
     this.userId = options.userId;
     this.key = options.key;
     
-    this.options = options.extraParams || {};
+    this.options = options.extraParams || {
+    };
     
     
     this.async = true;
@@ -34,7 +35,9 @@ Antidot.ACP = function (options) {
     //acp.listenTextField('#autocomplete', callbacks);
     this.listenTextField = function (selector, callbacks) {
         //console.log("fieldSelector : " + this.serviceId)
-        jQuery(selector).bind("keyup", {callbacks:callbacks} , function( event ) {
+        jQuery(selector).bind("keyup", { callbacks: callbacks
+        },
+        function (event) {
             //var res = ajaxGet(event.data.o, this.value, event.data.callbacks);
             var res = acp.getSuggestions(this.value, event.data.callbacks);
             //console.log(res);
@@ -43,101 +46,143 @@ Antidot.ACP = function (options) {
     //acp.getSuggestions('t', callbacks);
     this.getSuggestions = function (searchStr, callbacks) {
         //console.log("getSuggestion : " + this.serviceStatus);
-        return ajaxGet( searchStr, callbacks);
+        return ajaxGet(searchStr, callbacks);
     }
     
     
     function ajaxGet(searchStr, callbacks) {
         var dataResJson;
-        var urlParam = {"afs:service": this.acp.serviceId, 
-                    "afs:key": this.acp.key,
-                    "afs:query": searchStr, 
-                    "afs:lang":this.acp.language};
-                    
+        var urlParam = {
+            "afs:service": this.acp.serviceId,
+            "afs:key": this.acp.key,
+            "afs:query": searchStr,
+            "afs:lang": this.acp.language
+        };
         
-        if(this.acp.maxResults != undefined){
-            urlParam["afs:replies"]=this.acp.maxResults;
+        
+        if (this.acp.maxResults != undefined) {
+            urlParam[ "afs:replies"] = this.acp.maxResults;
         }
         
-        if(this.acp.serviceStatus != undefined){
-            urlParam["afs:status"]=this.acp.serviceStatus;
+        if (this.acp.serviceStatus != undefined) {
+            urlParam[ "afs:status"] = this.acp.serviceStatus;
         }
         
-        if(this.acp.sessionId != undefined){
-            urlParam["afs:sessionId"]=this.acp.sessionId;
+        if (this.acp.sessionId != undefined) {
+            urlParam[ "afs:sessionId"] = this.acp.sessionId;
         }
         
-        if(this.acp.userId != undefined){
-            urlParam["afs:userId"]=this.acp.userId;
+        if (this.acp.userId != undefined) {
+            urlParam[ "afs:userId"] = this.acp.userId;
         }
         
-        if(this.acp.options != undefined){
+        if (this.acp.options != undefined) {
             for (key in this.acp.options) {
-                urlParam[key]=this.acp.options[key];
+                urlParam[key] = this.acp.options[key];
             }
         }
         
-        var urlCall = this.acp.acpURL +"?";
+        var urlCall = this.acp.acpURL + "?";
         
-        if(this.acp.feeds != undefined){
-            var strFeeds="";
+        if (this.acp.feeds != undefined) {
+            var strFeeds = "";
             for (key in this.acp.feeds) {
-            
-                if(key == 0){
+                
+                if (key == 0) {
                     urlCall = urlCall + "afs:feed=" + this.acp.feeds[key];
                 } else {
-                    urlCall = urlCall +  "&afs:feed=" + this.acp.feeds[key];
+                    urlCall = urlCall + "&afs:feed=" + this.acp.feeds[key];
                 }
             }
         }
         
-        if(this.acp.minLength != undefined && searchStr.length>=this.acp.minLength){
-            var request = jQuery.ajax({
-                url: urlCall,
-                type: "GET",
-                timeout:this.acp.timeOut,
-                async:this.acp.async,
-                data: urlParam,
-                success: function (result) {
-                    var feeds =[];
-                    var jsonRes =[];
-                    var queryText="";
-                    //console.log("getSuggestion success : " + result);
-                    if(result[0] != undefined ){
-                        queryText=result[0];
-                        feeds.push(readFeedFromAcpOutput(undefined, result[1], result[2]));
-                    } else {
-                        for (key in result) {
-                            queryText=result[key][0];
-                            var tmpObj = readFeedFromAcpOutput(key, result[key][1], result[key][2]);
-                            
-                            //console.log("getSuggestion success key : " + key);
-                            feeds.push(tmpObj);
-                        }
+        if (this.acp.minLength != undefined && searchStr.length >= this.acp.minLength) {
+            
+            try {
+                if (window.XDomainRequest) {
+                
+                    var urlIE = urlCall;
+                    
+                    for(key in urlParam){
+                        var urlValue = urlParam[key];
+                        urlIE = urlIE +key+"="+urlValue+"&";
                     }
-                    jsonRes.push({query:queryText,feeds:feeds})
-                    dataResJson = jsonRes;
-                    if(callbacks != undefined && callbacks.onSuccess != undefined){
-                        callbacks.onSuccess(jsonRes);
+                    
+                    var xdr = new XDomainRequest();
+                    xdr.open("get", urlIE);
+                    xdr.onprogress = function () {
+                    };
+                    xdr.ontimeout = function (e) {
+                        callbacks.onTimeOut(xdr, xdr.responseText, e);
+                    };
+                    xdr.onerror = function (e) {
+                        callbacks.onError(xdr, xdr.responseText, e);
+                    };
+                    
+                    xdr.onload = function () {
+                        var result = jQuery.parseJSON(xdr.responseText);
+                        dataResJson = callbackSuccesAcpRequest(result, callbacks);
                     }
-                },
-                error: function (xhr, textStatus, errorThrown) {
-                    if(textStatus == "timeout"){
-                        if(callbacks != undefined && callbacks.onTimeOut != undefined){
-                            callbacks.onTimeOut(xhr, textStatus, errorThrown);
-                        }
-                    } else {
-                        if(callbacks != undefined && callbacks.onError != undefined){
-                            callbacks.onError(xhr, textStatus, errorThrown);
-                        }
-                    }
-                    //console.log("getSuggestion error : " + textStatus + " - xhr " + xhr);
-                },
-                async: false
-            });
+                    
+                    xdr.send();
+                } else {
+                    var request = jQuery.ajax({
+                        url: urlCall,
+                        type: "GET",
+                        timeout: this.acp.timeOut,
+                        async: this.acp.async,
+                        data: urlParam,
+                        crossDomain: true,
+                        success: function (result) {
+                            dataResJson = callbackSuccesAcpRequest(result, callbacks);
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            if (textStatus == "timeout") {
+                                if (callbacks != undefined && callbacks.onTimeOut != undefined) {
+                                    callbacks.onTimeOut(xhr, textStatus, errorThrown);
+                                }
+                            } else {
+                                if (callbacks != undefined && callbacks.onError != undefined) {
+                                    callbacks.onError(xhr, textStatus, errorThrown);
+                                }
+                            }
+                            //console.log("getSuggestion error : " + textStatus + " - xhr " + xhr);
+                        },
+                        async: false
+                    });
+                }
+            }
+            
+            catch (err) {
+                callbacks.onError(err);
+            }
         }
         
         return dataResJson;
+    }
+    
+    function callbackSuccesAcpRequest(result, callbacks){
+        var feeds =[];
+        var jsonRes =[];
+        var queryText="";
+        //console.log("getSuggestion success : " + result);
+        if(result[0] != undefined ){
+            queryText=result[0];
+            feeds.push(readFeedFromAcpOutput(undefined, result[1], result[2]));
+        } else {
+            for (key in result) {
+                queryText=result[key][0];
+                var tmpObj = readFeedFromAcpOutput(key, result[key][1], result[key][2]);
+                
+                //console.log("getSuggestion success key : " + key);
+                feeds.push(tmpObj);
+            }
+        }
+        jsonRes.push({query:queryText,feeds:feeds})
+        if(callbacks != undefined && callbacks.onSuccess != undefined){
+            callbacks.onSuccess(jsonRes);
+        }
+        return jsonRes;
     }
     
     function readFeedFromAcpOutput(feedKey, vals, attribut) {
@@ -154,9 +199,10 @@ Antidot.ACP = function (options) {
             jsonValue = vals;
         }
         
-        var jsonObj = {}
+        var jsonObj = {
+        }
         
-        if(feedKey != undefined){
+        if (feedKey != undefined) {
             jsonObj = {
                 name: feedKey,
                 replies: jsonValue
