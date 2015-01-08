@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+    <head>
+        <title>Test Carte WGS</title>
+        <meta name="robots" content="noindex">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="Content-language" content="fr" />
+		<style type="text/css">
+			html, body {
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+        <!--
+        <script type="text/javascript" src="//accor-autocompletion-rct.afs-antidot.net/acp_test/antidot.js"></script>
+    	-->
+        <script type="text/javascript" src="//accor-autocompletion-rct.afs-antidot.net/JS_API/antidot.js"></script> 
+        <script type="text/javascript">
+        	var acp = null;
+			jQuery(document).ready(function(){
+				var options = {
+					serviceId: 7265,
+					serviceStatus: "rc",
+                    key: "test",
+                    domain: "http://accor-autocompletion-rct.afs-antidot.net", 
+                    timeOut: 100,
+                    maxResults: 100,
+                    minLength: 2,
+                    siteOrigin: 'ALL'
+				};
+				acp = new Antidot.ACP(options);
+				var callbacks = {
+					onSuccess : function(data) {
+						console.log('#### SUCCESS');
+						console.log(data);
+					},
+					onError: function(xhr, textStatus, errorThrown) {
+						console.log('#### ERROR');
+					},
+					onTimeOut : function(xhr, textStatus, errorThrown) {
+						console.log('#### TIMEOUT');
+					}
+				};
+				acp.listenTextField('#search-destination-boo', callbacks);
+			});
+        </script>
+	</head>
+    <body>
+    	<h2>Antidot Auto-completion</h2>
+    	<div>
+        	<input type="text" id="search-destination-boo" autocomplete="off">
+    	</div>
+    	<div id="response"></div>
+    </body>
+</html>
