@@ -13,7 +13,7 @@
           margin:.8em 0 .2em;
           line-height:1.5;
       }</style>
-    
+
     <script type="text/javascript">
       jQuery.widget( "custom.catcomplete", $.ui.autocomplete, {
         _create: function() {
@@ -21,12 +21,12 @@
           this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
         },
         _renderItem: function( ul, item ) {
-          if (item.reply != undefined) {
-            return $( "<li>" ).text( item.reply ).appendTo( ul ); 
-          } else {
-            return $( "<li>" ).text( item ).appendTo( ul );
-          }
-        },
+if (item.reply != undefined) {
+return $( "<li>" ).text( item.reply ).appendTo( ul ); 
+                  } else {
+return $( "<li>" ).text( item ).appendTo( ul );
+                  }
+        	},
         _renderItemMeta: function( ul, item ) {
           var htmlRes; 
           for (metaKey in item) {
@@ -34,13 +34,13 @@
           }
           return htmlRes;
         },
-       	_renderItemData: function( ul, item ) {
-       		if (item.reply != undefined) {
-              return this._renderItem( ul, item ).data( "ui-autocomplete-item", {'label':item.reply, 'value':item.reply, 'metadata':item.metadata} ); 
-       		 } else {
-       			return this._renderItem( ul, item ).data( "ui-autocomplete-item", {'label':item, 'value':item} );
-           }
-	       },
+	_renderItemData: function( ul, item ) {
+		if (item.reply != undefined) {
+                	return this._renderItem( ul, item ).data( "ui-autocomplete-item", {'label':item.reply, 'value':item.reply} ); 
+		 } else {
+			return this._renderItem( ul, item ).data( "ui-autocomplete-item", {'label':item, 'value':item} );
+                 }
+	},
         _renderMenu: function( ul, items ) {
           var that = this, currentCategory = "";
           
@@ -133,22 +133,10 @@
         },
         minLength: 2,
         select: function( event, ui ) {
-        console.log("*************************** data for click ***************************");
-          console.log("inputQuery : "  + $( "#autocomplete" ).val());
-          console.log("selectedValue : " + ui.item.value);
-          console.log("options : " + ui.item.metadata);
-          
-          
-          Antidot.traceAndClick($( "#autocomplete" ).val(), ui.item.value, ui.item.metadata);
-          
-          
           console.log( ui.item ?
             "Selected: " + ui.item.label :
             "Nothing selected, input was " + this.value);
-            
-          if( ui.item.label != undefined){
-              $( "#autocomplete" ).val(ui.item.label);
-          }
+            $("#autocomplete" ).val(ui.item.label);
         },
         open: function() {
           $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );

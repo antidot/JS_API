@@ -13,7 +13,7 @@
           margin:.8em 0 .2em;
           line-height:1.5;
       }</style>
-    
+
     <script type="text/javascript">
       jQuery.widget( "custom.catcomplete", $.ui.autocomplete, {
         _create: function() {
@@ -21,12 +21,8 @@
           this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
         },
         _renderItem: function( ul, item ) {
-          if (item.reply != undefined) {
-            return $( "<li>" ).text( item.reply ).appendTo( ul ); 
-          } else {
-            return $( "<li>" ).text( item ).appendTo( ul );
-          }
-        },
+        		return $( "<li>" ).text( item.reply ).appendTo( ul );
+        	},
         _renderItemMeta: function( ul, item ) {
           var htmlRes; 
           for (metaKey in item) {
@@ -34,13 +30,6 @@
           }
           return htmlRes;
         },
-       	_renderItemData: function( ul, item ) {
-       		if (item.reply != undefined) {
-              return this._renderItem( ul, item ).data( "ui-autocomplete-item", {'label':item.reply, 'value':item.reply, 'metadata':item.metadata} ); 
-       		 } else {
-       			return this._renderItem( ul, item ).data( "ui-autocomplete-item", {'label':item, 'value':item} );
-           }
-	       },
         _renderMenu: function( ul, items ) {
           var that = this, currentCategory = "";
           
@@ -53,19 +42,10 @@
                currentCategory = item.name;
              }
              for (i = 0; i < item.replies.length; i++) {
-               li = that._renderItemData( ul, item.replies[i] );
-                if ( item.name) {
+                li = that._renderItemData( ul, item.replies[i] );
+                if ( item.name ) {
                   li.attr( "aria-label", item.name + " : " + item.replies[i].reply );
                 }
-                if (item.replies[i].reply != undefined) {
-                	li.attr( "data-ui-autocomplete-item", "{\"label\":\""+item.replies[i].reply+"\",\"value\":\""+item.replies[i].reply+"\"}" );
-                	li.attr( "data-ui-autocomplete-item-value", item.replies[i].reply );
-                	li.attr( "data-value", item.replies[i].reply );
-            		 } else {
-            			li.attr( "data-ui-autocomplete-item",  "{\"label\":\""+item.replies[i]+"\",\"value\":\""+item.replies[i]+"\"}" );
-            			li.attr( "data-ui-autocomplete-item-value", item.replies[i]);
-            			li.attr( "data-value", item.replies[i] );
-                 }
                 metaLi = that._renderItemMeta( li, item.replies[i].metadata );
              };
            });
@@ -133,22 +113,9 @@
         },
         minLength: 2,
         select: function( event, ui ) {
-        console.log("*************************** data for click ***************************");
-          console.log("inputQuery : "  + $( "#autocomplete" ).val());
-          console.log("selectedValue : " + ui.item.value);
-          console.log("options : " + ui.item.metadata);
-          
-          
-          Antidot.traceAndClick($( "#autocomplete" ).val(), ui.item.value, ui.item.metadata);
-          
-          
           console.log( ui.item ?
             "Selected: " + ui.item.label :
             "Nothing selected, input was " + this.value);
-            
-          if( ui.item.label != undefined){
-              $( "#autocomplete" ).val(ui.item.label);
-          }
         },
         open: function() {
           $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
