@@ -1,8 +1,10 @@
-/*! Antidot javascript - V0.3 - 2015-01-07
+/*! Antidot javascript - V0.4 - 2015-02-04
 */
 
+var _AntidotGlobalParam={};
+
 var Antidot = function () {
-    this._version = "V0.3";
+    this._version = "V0.4";
 };
 
 Antidot.ACP = function (options) {
@@ -25,18 +27,29 @@ Antidot.ACP = function (options) {
     this.userId = options.userId;
     this.key = options.key;
     
+    this.siteOrigin = options.siteOrigin;
+    
     this.options = options.extraParams || {
     };
     
-    
-    this.async = true;
+    this.async = false;
     this.acpURL = options.domain + '/acp';
+    
+    //*****************************************************************
+    //Init global var to get general param.
+    _AntidotGlobalParam["siteOrigin"]=this.siteOrigin;
+    _AntidotGlobalParam["serviceId"]=this.serviceId;
+    _AntidotGlobalParam["serviceStatus"]=this.serviceStatus;
+    _AntidotGlobalParam["domain"]=this.domain;
+    _AntidotGlobalParam["key"]=this.key;
+    _AntidotGlobalParam["sessionId"]=this.sessionId;
+    _AntidotGlobalParam["userId"]=this.userId;
+    //*****************************************************************
     
     //acp.listenTextField('#autocomplete', callbacks);
     this.listenTextField = function (selector, callbacks) {
         //console.log("fieldSelector : " + this.serviceId)
-        jQuery(selector).bind("keyup", { callbacks: callbacks
-        },
+        jQuery(selector).bind("keyup", { callbacks: callbacks },
         function (event) {
             //var res = ajaxGet(event.data.o, this.value, event.data.callbacks);
             var res = acp.getSuggestions(this.value, event.data.callbacks);
@@ -46,7 +59,14 @@ Antidot.ACP = function (options) {
     //acp.getSuggestions('t', callbacks);
     this.getSuggestions = function (searchStr, callbacks) {
         //console.log("getSuggestion : " + this.serviceStatus);
-        return ajaxGet(searchStr, callbacks);
+        var dataResJson = ajaxGet(searchStr, callbacks);
+        var isResEmpty = ctrlEmptyResult(dataResJson);
+        console.log("Suggestion response is empty : " + isResEmpty);
+        if(isResEmpty){
+            Antidot.trace(searchStr, "emptyqueries");
+        }
+        
+        return dataResJson;
     }
     
     
@@ -147,13 +167,10 @@ Antidot.ACP = function (options) {
                                 }
                             }
                             //console.log("getSuggestion error : " + textStatus + " - xhr " + xhr);
-                        },
-                        async: false
+                        }
                     });
                 }
-            }
-            
-            catch (err) {
+            } catch (err) {
                 callbacks.onError(err);
             }
         }
@@ -215,6 +232,29 @@ Antidot.ACP = function (options) {
         
         return jsonObj;
     }
+
+    function ctrlEmptyResult(dataResJson){
+        var isEmpty=false;
+        if(dataResJson != undefined && dataResJson.length > 0){
+            if(dataResJson[0].feeds != undefined && dataResJson[0].feeds.length > 0){
+                for (feed in dataResJson[0].feeds) {
+                    var feed = dataResJson[0].feeds[feed];
+                    if(feed != undefined && feed.replies.length > 0){
+                        return false;
+                    } else {
+                        isEmpty=true;
+                    }
+                }
+            } else {
+                isEmpty=true;
+            }
+        } else {
+            isEmpty=true;
+        }
+        
+        return isEmpty;
+    }
+
 }
 
 Antidot.getVersion = function () {
@@ -222,3 +262,138 @@ Antidot.getVersion = function () {
     console.log("getVersion : " + a._version);
     return a._version;
 }
+
+Antidot.ajaxCall = function (urlCall, urlParam) {
+    try {
+        if (window.XDomainRequest) {
+        
+            var urlIE = urlCall;
+            for(key in urlParam){
+                var urlValue = urlParam[key];
+                urlIE = urlIE +key+"="+urlValue+"&";
+            }
+            
+            var xdr = new XDomainRequest();
+            xdr.open("get", urlIE);
+            xdr.onprogress = function () {
+            };
+            xdr.ontimeout = function (e) {
+                console.log("ajaxcall timeout");
+            };
+            xdr.onerror = function (e) {
+                console.log("ajaxcall error ");
+            };
+            
+            xdr.onload = function () {
+                console.log("ajaxcall success");
+            }
+            
+            xdr.send();
+        } else {
+            var request = jQuery.ajax({
+                url: urlCall,
+                type: "GET",
+                async: true,
+                data: urlParam,
+                crossDomain: true,
+                success: function (result) {
+                    console.log("ajaxcall success");
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log("ajaxcall error : " + textStatus + " - xhr " + xhr);
+                }
+            });
+        }
+    } catch (err) {
+        callbacks.onError(err);
+    }
+}
+
+
+// feed doit prend les valeurs suivante : lastqueries ou emptyqueries
+Antidot.trace = function(query, feed, options) {
+    var urlParam = {
+            "afs:service": _AntidotGlobalParam.serviceId,
+            "afs:key": _AntidotGlobalParam.key,
+            "afs:query": query,
+            "afs:feed":feed
+        };
+        
+    if (_AntidotGlobalParam.serviceStatus != undefined) {
+        urlParam[ "afs:status"] = _AntidotGlobalParam.serviceStatus;
+    }
+    
+    if (_AntidotGlobalParam.sessionId != undefined) {
+        urlParam[ "afs:sessionId"] = _AntidotGlobalParam.sessionId;
+    }
+    
+    if (_AntidotGlobalParam.userId != undefined) {
+        urlParam[ "afs:userId"] = _AntidotGlobalParam.userId;
+    }
+    
+    if (_AntidotGlobalParam.siteOrigin != undefined) {
+        urlParam[ "siteOrigin"] = _AntidotGlobalParam.siteOrigin;
+    }
+    
+    if (window.location.host != undefined) {
+         urlParam[ "host"] = window.location.host;
+    }
+    
+    if (options != undefined) {
+        for (key in options) {
+            urlParam[key] = options[key];
+        }
+    }
+    
+    var urlCall = _AntidotGlobalParam.domain + "/search?";
+    Antidot.ajaxCall(urlCall, urlParam);
+}
+
+Antidot.click = function(target, options) {
+    var label="";
+    var urlParam = {
+            "afs:service": _AntidotGlobalParam.serviceId,
+            "afs:key": _AntidotGlobalParam.key,
+            "afs:action": "log",
+            "afs:target":target
+        };
+        
+    if (_AntidotGlobalParam.serviceStatus != undefined) {
+        urlParam[ "afs:status"] = _AntidotGlobalParam.serviceStatus;
+    }
+    
+    if (_AntidotGlobalParam.sessionId != undefined) {
+        urlParam[ "afs:sessionId"] = _AntidotGlobalParam.sessionId;
+    }
+    
+    if (_AntidotGlobalParam.userId != undefined) {
+        urlParam[ "afs:userId"] = _AntidotGlobalParam.userId;
+    }
+    
+    if (_AntidotGlobalParam.siteOrigin != undefined) {
+        label = label + 'siteOrigin:' + _AntidotGlobalParam.siteOrigin + ';';
+    }
+    
+    if (window.location.host != undefined) {
+        label = label + 'host:' + window.location.host + ';';
+    }
+    
+    if (options != undefined) {
+        for (key in options) {
+            label = label + key + ':' + options[key] + ';';
+        }
+    }
+    
+    urlParam[ "afs:label"] = label;
+    
+    var urlCall = _AntidotGlobalParam.domain + "/click?";
+    Antidot.ajaxCall(urlCall, urlParam);
+}
+
+Antidot.traceAndClick = function(inputQuery,selectedValue, options) {
+    Antidot.trace(inputQuery, "lastqueries", options);
+    Antidot.click(selectedValue, options);
+}
+
+
+
