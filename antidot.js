@@ -281,7 +281,7 @@ Antidot.ajaxCall = function (urlCall, urlParam) {
                 console.log("ajaxcall timeout");
             };
             xdr.onerror = function (e) {
-                console.log("ajaxcall error ");
+                //console.log("ajaxcall error ");
             };
             
             xdr.onload = function () {
@@ -300,7 +300,7 @@ Antidot.ajaxCall = function (urlCall, urlParam) {
                     console.log("ajaxcall success");
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log("ajaxcall error : " + textStatus + " - xhr " + xhr);
+                    //console.log("ajaxcall error : " + textStatus + " - xhr " + xhr);
                 }
             });
         }
