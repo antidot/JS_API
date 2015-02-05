@@ -98,11 +98,12 @@
         serviceId: 7265,
         serviceStatus: "rc",
         key: "test",
-        domain: "http://accor-autocompletion-rct.afs-antidot.net",
+        domain: "http://accor-staging.afs-antidot.net/",
          timeOut: 100,
         maxResults: 100,
         minLength: 2,
-        siteOrigin: 'ALL'
+        siteOrigin: 'ALL', 
+        feeds: ['hotels_ibp_fr','poi_ibp_fr']
       }
       
       var acp = new Antidot.ACP(initParam);
