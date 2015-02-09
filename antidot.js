@@ -117,7 +117,6 @@ Antidot.ACP = function (options) {
         }
         
         if (this.acp.minLength != undefined && searchStr.length >= this.acp.minLength) {
-            
             try {
                 if (window.XDomainRequest) {
                 
