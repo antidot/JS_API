@@ -63,7 +63,7 @@ Antidot.ACP = function (options) {
         var isResEmpty = ctrlEmptyResult(dataResJson);
         //console.log("Suggestion response is empty : " + isResEmpty);
         if(isResEmpty){
-            Antidot.trace(searchStr, "emptyqueries");
+            Antidot.trace(searchStr, "Emptyqueries");
         }
         
         return dataResJson;
@@ -309,7 +309,7 @@ Antidot.ajaxCall = function (urlCall, urlParam) {
 }
 
 
-// feed doit prend les valeurs suivante : lastqueries ou emptyqueries
+// feed doit prend les valeurs suivante : Lastqueries ou Emptyqueries
 Antidot.trace = function(query, feed, options) {
     var urlParam = {
             "afs:service": _AntidotGlobalParam.serviceId,
@@ -390,7 +390,7 @@ Antidot.click = function(target, options) {
 }
 
 Antidot.traceAndClick = function(inputQuery,selectedValue, options) {
-    Antidot.trace(inputQuery, "lastqueries", options);
+    Antidot.trace(inputQuery, "Lastqueries", options);
     Antidot.click(selectedValue, options);
 }
 
