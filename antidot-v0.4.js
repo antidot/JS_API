@@ -1,10 +1,10 @@
-/*! Antidot javascript - V0.5 - 2015-02-11
+/*! Antidot javascript - V0.4 - 2015-02-04
 */
 
 var _AntidotGlobalParam={};
 
 var Antidot = function () {
-    this._version = "V0.5";
+    this._version = "V0.4";
 };
 
 Antidot.ACP = function (options) {
@@ -61,7 +61,7 @@ Antidot.ACP = function (options) {
         //console.log("getSuggestion : " + this.serviceStatus);
         var dataResJson = ajaxGet(searchStr, callbacks);
         var isResEmpty = ctrlEmptyResult(dataResJson);
-        //console.log("Suggestion response is empty : " + isResEmpty);
+        console.log("Suggestion response is empty : " + isResEmpty);
         if(isResEmpty){
             Antidot.trace(searchStr, "emptyqueries");
         }
@@ -258,7 +258,7 @@ Antidot.ACP = function (options) {
 
 Antidot.getVersion = function () {
     var a = new Antidot();
-    //console.log("getVersion : " + a._version);
+    console.log("getVersion : " + a._version);
     return a._version;
 }
 
@@ -277,14 +277,14 @@ Antidot.ajaxCall = function (urlCall, urlParam) {
             xdr.onprogress = function () {
             };
             xdr.ontimeout = function (e) {
-                //console.log("ajaxcall timeout");
+                console.log("ajaxcall timeout");
             };
             xdr.onerror = function (e) {
                 //console.log("ajaxcall error ");
             };
             
             xdr.onload = function () {
-                //console.log("ajaxcall success");
+                console.log("ajaxcall success");
             }
             
             xdr.send();
@@ -296,7 +296,7 @@ Antidot.ajaxCall = function (urlCall, urlParam) {
                 data: urlParam,
                 crossDomain: true,
                 success: function (result) {
-                    //console.log("ajaxcall success");
+                    console.log("ajaxcall success");
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     //console.log("ajaxcall error : " + textStatus + " - xhr " + xhr);
