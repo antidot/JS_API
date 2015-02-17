@@ -82,28 +82,15 @@
     </div>
     <script type="text/javascript">
       
-      var initParam_old = {
-                    serviceId:7265,
-                    serviceStatus:"rc",
-                    key:"test",
-                    domain:"http://accor-autocompletion-rct.afs-antidot.net",
-                    timeOut:100,
-                    maxResults:100
-                    //minLength:2
-                    //feeds:["hotels_ada_fr","poi_all_fr"]
-                    //extraParams:{"afs:feed":"GEOMAJ"}
-                  }
-                  
       var initParam = {
-        serviceId: 7265,
+        serviceId: 666,
         serviceStatus: "rc",
-        key: "test",
-        domain: "http://accor-autocompletion-dev.afs-antidot.net",
+        key: "yourKey",
+        domain: "http://your.afs.url.net",
         timeOut: 100,
         maxResults: 100,
         minLength: 2,
-        siteOrigin: 'ALL', 
-        feeds: ['hotels_ibp_fr','poi_ibp_fr']
+        feeds: ['yourFeed1','yourFeed2']
       }
       
       var acp = new Antidot.ACP(initParam);
