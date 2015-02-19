@@ -1,10 +1,10 @@
-/*! Antidot javascript - V0.7 - 2015-02-19
+/*! Antidot javascript - V0.6 - 2015-02-17
 */
 
 var _AntidotGlobalParam={};
 
 var Antidot = function () {
-    this._version = "V0.7";
+    this._version = "V0.6";
 };
 
 Antidot.ACP = function (options) {
@@ -122,7 +122,7 @@ Antidot.ACP = function (options) {
             try {
                 if (window.XDomainRequest) {
                 
-                    var urlIE = urlCall + "&";
+                    var urlIE = urlCall+"&";
                     
                     for(key in urlParam){
                         var urlValue = urlParam[key];

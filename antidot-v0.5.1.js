@@ -1,10 +1,10 @@
-/*! Antidot javascript - V0.7 - 2015-02-19
+/*! Antidot javascript - V0.5.1 - 2015-02-19
 */
 
 var _AntidotGlobalParam={};
 
 var Antidot = function () {
-    this._version = "V0.7";
+    this._version = "V0.5.1";
 };
 
 Antidot.ACP = function (options) {
@@ -28,8 +28,6 @@ Antidot.ACP = function (options) {
     this.key = options.key;
     
     this.siteOrigin = options.siteOrigin;
-    
-    this.disableTraceEmptyQueries = options.disableTraceEmptyQueries || false;
     
     this.options = options.extraParams || {
     };
@@ -64,7 +62,7 @@ Antidot.ACP = function (options) {
         var dataResJson = ajaxGet(searchStr, callbacks);
         var isResEmpty = ctrlEmptyResult(dataResJson);
         //console.log("Suggestion response is empty : " + isResEmpty);
-        if(!this.disableTraceEmptyQueries && isResEmpty){
+        if(isResEmpty){
             Antidot.trace(searchStr, "Emptyqueries");
         }
         
@@ -122,7 +120,7 @@ Antidot.ACP = function (options) {
             try {
                 if (window.XDomainRequest) {
                 
-                    var urlIE = urlCall + "&";
+                    var urlIE = urlCall+"&";
                     
                     for(key in urlParam){
                         var urlValue = urlParam[key];
