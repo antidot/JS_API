@@ -109,11 +109,10 @@ Antidot.ACP = function (options) {
         if (this.acp.feeds != undefined) {
             var strFeeds = "";
             for (key in this.acp.feeds) {
-                
                 if (key == 0) {
-                    urlCall = urlCall + encodeURIComponent("afs:feed=") + this.acp.feeds[key];
+                    urlCall = urlCall + "afs:feed=" + this.acp.feeds[key];
                 } else {
-                    urlCall = urlCall + "&" + encodeURIComponent("afs:feed=")  + this.acp.feeds[key];
+                    urlCall = urlCall + "&afs:feed="  + this.acp.feeds[key];
                 }
             }
         }
