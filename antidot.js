@@ -171,23 +171,29 @@ Antidot.ACP = function (options) {
     }
     
     function callbackSuccesAcpRequest(result, callbacks){
-        var feeds =[];
+        
         var jsonRes =[];
-        var queryText="";
         //console.log("getSuggestion success : " + result);
-        if(result[0] != undefined ){
-            queryText=result[0];
-            feeds.push(readFeedFromAcpOutput(undefined, result[1], result[2]));
+        if(result.query != undefined){
+            jsonRes.push(result);
         } else {
-            for (key in result) {
-                queryText=result[key][0];
-                var tmpObj = readFeedFromAcpOutput(key, result[key][1], result[key][2]);
-                
-                //console.log("getSuggestion success key : " + key);
-                feeds.push(tmpObj);
+            var feeds =[];
+            var queryText="";
+            if(result[0] != undefined ){
+                queryText=result[0];
+                feeds.push(readFeedFromAcpOutput(undefined, result[1], result[2]));
+            } else {
+                for (key in result) {
+                    queryText=result[key][0];
+                    var tmpObj = readFeedFromAcpOutput(key, result[key][1], result[key][2]);
+                    
+                    //console.log("getSuggestion success key : " + key);
+                    feeds.push(tmpObj);
+                }
             }
+            jsonRes.push({query:queryText,feeds:feeds});
         }
-        jsonRes.push({query:queryText,feeds:feeds});
+        
         
         var isResEmpty = ctrlEmptyResult(jsonRes);
         //console.log("Suggestion response is empty : " + isResEmpty);
