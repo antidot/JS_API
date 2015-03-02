@@ -1,10 +1,10 @@
-/*! Antidot javascript - V1.0 - 2015-03-02
+/*! Antidot javascript - V0.7 - 2015-02-19
 */
 
 var _AntidotGlobalParam={};
 
 var Antidot = function () {
-    this._version = "V1.0";
+    this._version = "V0.7";
 };
 
 Antidot.ACP = function (options) {
@@ -62,8 +62,15 @@ Antidot.ACP = function (options) {
     this.getSuggestions = function (searchStr, callbacks) {
         //console.log("getSuggestion : " + this.serviceStatus);
         var dataResJson = ajaxGet(searchStr, callbacks);
+        var isResEmpty = ctrlEmptyResult(dataResJson);
+        //console.log("Suggestion response is empty : " + isResEmpty);
+        if(!this.disableTraceEmptyQueries && isResEmpty){
+            Antidot.trace(searchStr, "Emptyqueries");
+        }
+        
         return dataResJson;
     }
+    
     
     function ajaxGet(searchStr, callbacks) {
         var dataResJson;
@@ -73,6 +80,7 @@ Antidot.ACP = function (options) {
             "afs:query": searchStr,
             "afs:lang": this.acp.language
         };
+        
         
         if (this.acp.maxResults != undefined) {
             urlParam[ "afs:replies"] = this.acp.maxResults;
@@ -187,18 +195,7 @@ Antidot.ACP = function (options) {
                 feeds.push(tmpObj);
             }
         }
-        jsonRes.push({query:queryText,feeds:feeds});
-        
-        var isResEmpty = ctrlEmptyResult(jsonRes);
-        //console.log("Suggestion response is empty : " + isResEmpty);
-        if(!this.acp.disableTraceEmptyQueries && isResEmpty){
-            if(jsonRes[0] != undefined){
-                Antidot.trace(jsonRes[0].query, "Emptyqueries");
-            } else {
-                Antidot.trace("", "Emptyqueries");
-            }
-        }
-        
+        jsonRes.push({query:queryText,feeds:feeds})
         if(callbacks != undefined && callbacks.onSuccess != undefined){
             callbacks.onSuccess(jsonRes);
         }

@@ -1,10 +1,10 @@
-/*! Antidot javascript - V1.0 - 2015-03-02
+/*! Antidot javascript - V0.5.3 - 2015-03-02
 */
 
 var _AntidotGlobalParam={};
 
 var Antidot = function () {
-    this._version = "V1.0";
+    this._version = "V0.5.3";
 };
 
 Antidot.ACP = function (options) {
@@ -28,8 +28,6 @@ Antidot.ACP = function (options) {
     this.key = options.key;
     
     this.siteOrigin = options.siteOrigin;
-    
-    this.disableTraceEmptyQueries = options.disableTraceEmptyQueries || false;
     
     this.options = options.extraParams || {
     };
@@ -62,8 +60,10 @@ Antidot.ACP = function (options) {
     this.getSuggestions = function (searchStr, callbacks) {
         //console.log("getSuggestion : " + this.serviceStatus);
         var dataResJson = ajaxGet(searchStr, callbacks);
+        
         return dataResJson;
     }
+    
     
     function ajaxGet(searchStr, callbacks) {
         var dataResJson;
@@ -73,6 +73,7 @@ Antidot.ACP = function (options) {
             "afs:query": searchStr,
             "afs:lang": this.acp.language
         };
+        
         
         if (this.acp.maxResults != undefined) {
             urlParam[ "afs:replies"] = this.acp.maxResults;
@@ -101,6 +102,7 @@ Antidot.ACP = function (options) {
         if (this.acp.feeds != undefined) {
             var strFeeds = "";
             for (key in this.acp.feeds) {
+                
                 if (key == 0) {
                     urlCall = urlCall + "afs:feed=" + this.acp.feeds[key];
                 } else {
@@ -113,7 +115,7 @@ Antidot.ACP = function (options) {
             try {
                 if (window.XDomainRequest) {
                 
-                    var urlIE = urlCall + "&";
+                    var urlIE = urlCall+"&";
                     
                     for(key in urlParam){
                         var urlValue = urlParam[key];
@@ -191,7 +193,7 @@ Antidot.ACP = function (options) {
         
         var isResEmpty = ctrlEmptyResult(jsonRes);
         //console.log("Suggestion response is empty : " + isResEmpty);
-        if(!this.acp.disableTraceEmptyQueries && isResEmpty){
+        if(isResEmpty){
             if(jsonRes[0] != undefined){
                 Antidot.trace(jsonRes[0].query, "Emptyqueries");
             } else {
