@@ -1,11 +1,11 @@
-/*! Antidot javascript - V0.5.5 - 2015-04-17
+/*! Antidot javascript - V0.5.4 - 2015-04-16
  */
 (function($) {
 
     _AntidotGlobalParam = {};
 
     window.Antidot = function() {
-        this._version = "V0.5.5";
+        this._version = "V0.5.4";
     };
 
     Antidot.ACP = function(options) {
@@ -297,7 +297,7 @@
 
                 xdr.send();
             } else {
-                var request = $.ajax({
+                var request = jQuery.ajax({
                     url: urlCall,
                     type: "GET",
                     async: true,
